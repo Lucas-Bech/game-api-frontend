@@ -1,20 +1,22 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
-import Home from "../views/Home.vue";
 
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
     path: "/",
-    name: "Home",
-    component: Home
+    redirect: "/search/"
   },
   {
-    path: "/app",
-    name: "App",
-    component: () =>
-      import("../views/App.vue")
+    path: "/search/:queryString",
+    props: true, // define props on component for this directive to work
+    component: () => import("@/views/SearchResultsView.vue") // lazy load
+  },
+  {
+    path: "/app/:id",
+    props: true, // define props on component for this directive to work
+    component: () => import("@/views/AppView.vue") // lazy load
   }
 ];
 
