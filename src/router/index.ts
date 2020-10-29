@@ -9,7 +9,7 @@ const routes: Array<RouteConfig> = [
     redirect: "/search/"
   },
   {
-    path: "/search/:queryString",
+    path: "/search/:queryString/:currentPage",
     props: true, // define props on component for this directive to work
     component: () => import("@/views/SearchResultsView.vue") // lazy load
   },

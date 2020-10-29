@@ -39,6 +39,6 @@ body,
 }
 
 #app {
-  padding: 7em;
+  margin: auto;
 }
 </style>

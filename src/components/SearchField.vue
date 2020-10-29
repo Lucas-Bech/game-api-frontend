@@ -17,7 +17,7 @@ export default class SearchField extends Vue {
 
   search() {
     if (this.$router.currentRoute.params.queryString !== this.queryString) {
-      this.$router.push(`/search/${this.queryString}`);
+      this.$router.push(`/search/${this.queryString}/1`);
     }
   }
 }
@@ -34,10 +34,5 @@ input {
   border: 2px solid $primary-color;
   border-radius: 7px;
   outline: none;
-
-  :hover {
-    border-color: $primary-color;
-    box-shadow: 0 0 10px $primary-color;
-  }
 }
 </style>

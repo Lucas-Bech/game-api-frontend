@@ -27,7 +27,7 @@ export default class DLC extends Vue {
 
   created() {
     this.axios
-      .get(`http://gameapi.ga:8080/api/gamedatabase/dlc/?id=${this.dlcId}`)
+      .get(`https://gameapi.gq/api/gamedatabase/dlc/?id=${this.dlcId}`)
       .then(response => (this.dlc = response.data));
   }
 }

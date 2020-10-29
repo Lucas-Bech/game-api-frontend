@@ -1,5 +1,10 @@
 <template>
-  <div id="app-infopage">
+<div>
+  <div v-if="isLoading" id="load-state">
+        <span>Loading...</span>
+  </div>
+
+  <div v-if="!isLoading" id="app-infopage">
     <img :src="app.header_image" />
 
     <h1>{{ app.name }}</h1>
@@ -15,16 +20,15 @@
       </h4>
     </div>
 
-    <h3>Review rating: {{ app.review_score }}/10</h3>
+    <h3 v-if="app.type === 'game'">Review rating: {{ app.review_score }}/10</h3>
 
     <div id="main">
-      <div id="dlc-list" v-if="app.type === 'game'">
+      <div id="dlc-list" v-if="app.type === 'game' && app.dlc_ids.length != 0">
         <h3 class="list-title">DLC</h3>
         <DLC :dlcId="dlcId" v-for="dlcId in app.dlc_ids" :key="dlcId" />
-        <p v-if="app.dlc_ids.length == 0">No DLC</p>
       </div>
 
-      <div id="category-list">
+      <div id="category-list" v-if="app.categories.length != 0">
         <h3 class="list-title">Categories</h3>
         <span v-for="(category, index) in app.categories" :key="index">
           <span v-if="index != 0">, </span>
@@ -32,7 +36,7 @@
         </span>
       </div>
 
-      <div id="genre-list">
+      <div id="genre-list" v-if="app.genres.length != 0">
         <h3 class="list-title">Genres</h3>
         <span v-for="(genre, index) in app.genres" :key="genre">
           <span v-if="index != 0">, </span>
@@ -41,11 +45,13 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import DLC from "@/components/DLC.vue";
+import defaultHeaderImage from "@/media/images/default_header_image.png";
 
 @Component({
   components: {
@@ -56,6 +62,7 @@ export default class Game extends Vue {
   @Prop() private id!: number;
 
   private app: any = {};
+  private isLoading = false;
 
   get computedDeveloper() {
     if (this.app?.developers?.[0])
@@ -72,11 +79,27 @@ export default class Game extends Vue {
   }
 
   created() {
+    this.isLoading = true;
     this.axios
       .get(
-        `http://gameapi.ga:8080/api/gamedatabase/game/?id=${this.id}&dlc=true`
+        `https://gameapi.gq/api/gamedatabase/game/?id=${this.id}&dlc=true`
       )
-      .then(response => (this.app = response.data));
+      .then(response => {
+        this.app = response.data;
+
+        // set default header_image if url missing
+        if (!this.app.header_image) {
+          this.app.header_image = defaultHeaderImage;
+          return;
+        }
+
+        // set default header_image if url broken
+        this.axios.head(this.app.header_image).catch(() => {
+          this.app.header_image = defaultHeaderImage;
+        })
+
+        this.isLoading = false;
+      });
   }
 }
 </script>
