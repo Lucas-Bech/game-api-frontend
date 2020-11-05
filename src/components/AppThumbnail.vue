@@ -9,7 +9,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
-export default class Game extends Vue {
+export default class AppThumbnail extends Vue {
   @Prop() private app!: any;
 
   get routeToAppPage() {

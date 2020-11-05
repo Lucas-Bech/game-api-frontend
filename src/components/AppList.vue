@@ -1,19 +1,24 @@
 <template>
-<div>
-  <div class="app-list">
-    <AppThumbnail :app="app" v-for="app in currentPageApps" :key="app.steam_appid" />
-  </div>
-  <div class="page-buttons">
-      <button 
-        v-for="pageNumber in numberOfPages" 
+  <div>
+    <div class="app-list">
+      <AppThumbnail
+        :app="app"
+        v-for="app in currentPageApps"
+        :key="app.steam_appid"
+      />
+    </div>
+    <div class="page-buttons">
+      <button
+        v-for="pageNumber in numberOfPages"
         :key="pageNumber"
         ref="pageButtons"
         @click="setCurrentPageEmit(pageNumber)"
-        :class="{ active: currentPage == (pageNumber - 1) }"
-        >Page {{ pageNumber }}
+        :class="{ active: currentPage == pageNumber - 1 }"
+      >
+        Page {{ pageNumber }}
       </button>
+    </div>
   </div>
-</div>
 </template>
 
 <script lang="ts">
@@ -28,7 +33,7 @@ import AppThumbnail from "@/components/AppThumbnail.vue";
 export default class AppList extends Vue {
   @Prop() private apps!: Array<any>;
   @Prop() private currentPage!: number;
-  
+
   private entriesPerPage = 10;
 
   get numberOfPages(): number {
@@ -41,16 +46,15 @@ export default class AppList extends Vue {
   }
 
   setCurrentPageEmit(newPageNumber: number): void {
-    this.$root.$emit("setCurrentPage", newPageNumber)
+    this.$root.$emit("setCurrentPage", newPageNumber);
     this.resetView();
   }
 
   resetView(): void {
     this.$nextTick(() => {
       window.scrollTo(0, 0);
-    })
+    });
   }
-  
 }
 </script>
 
